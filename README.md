@@ -6,4 +6,5 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
   
   # Participantes:
   -  Maria Clara Lima da Silva 
-  -  Jhonny Braga Reis 
+  -  Jhonny Braga Reis
+  -  Igor Henrique Tentemplis Martins
