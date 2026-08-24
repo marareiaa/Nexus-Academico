@@ -8,3 +8,9 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
   -  Maria Clara Lima da Silva 
   -  Jhonny Braga Reis
   -  Igor Henrique Tentemplis Martins
+
+- Realização dos Requisitos de Entrega (24/08/2026)
+  Assunto: Definição da Concepção e Alinhamento; Listagem de Requisitos não Funcionais.
+  
+  # Realizador:
+  -  Jhonny Braga Reis
