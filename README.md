@@ -17,8 +17,9 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
 | 25/08/2026 | Organização do GitHub – estruturação e organização inicial do repositório do projeto | Maria Clara Lima da Silva |
 | 25/08/2026 | Listagem e Definição dos Requisitos | Jhonny Braga Reis |
 | 03/09/2026 | Criação do Diagrama e descrição dos elementos | Maria Clara Lima da Silva |
+| 03/09/2026 | Definição e Criação das Justificativas Técnicas e Arquiteturais do sistema | Igor Henrique Tentemplis Martins|
 
-### Diagrama do Sistema
+## Diagrama do Sistema
 
 O diagrama apresenta a estrutura do sistema e os principais elementos que compõem a aplicação.
 
