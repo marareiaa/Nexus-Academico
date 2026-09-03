@@ -22,7 +22,7 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
 
 O diagrama apresenta a estrutura do sistema e os principais elementos que compõem a aplicação.
 
-[📄 Visualizar o Diagrama em PDF](docs/diagrama.pdf)
+[📄 Visualizar o Diagrama em PDF](docs/diagrama-de-classe.pdf)
 
 
 
