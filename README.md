@@ -23,6 +23,7 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
 | 04/09/2026 | Finalização do diagrama ER (DER) | Jhonny Braga Reis |
 | 05/09/2026 | Revisão com o professor Aparecido Vilela Junior para feedback sobre melhorias; início dos ajustes indicados | Jhonny Braga Reis |
 | 08/09/2026 | Finalização dos ajustes e reenvio do material ao professor para nova revisão | Jhonny Braga Reis |
+| 09/09/2026 | Revisão e correção dos pontos apontados pelo professor; modelo validado e aprovado; revisão e formatação do documento da AEP | Jhonny Braga Reis |
 
 
 ## 📄 Diagramas do Sistema
