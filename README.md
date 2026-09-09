@@ -18,7 +18,7 @@ Sistema de Gestão de Eventos e Ligas Acadêmicas (Foco no ODS 8 - Trabalho Dece
 | 25/08/2026 | Organização do GitHub – estruturação e organização inicial do repositório do projeto | Maria Clara Lima da Silva |
 | 25/08/2026 | Listagem e Definição dos Requisitos | Jhonny Braga Reis |
 | 03/09/2026 | Início da modelagem de especialização e generalização no DER | Jhonny Braga Reis |
-| 03/09/2026 | Criação do Diagrama e descrição dos elementos | Maria Clara Lima da Silva |
+| 03/09/2026 | Criação do Diagrama de Classe e descrição dos elementos | Maria Clara Lima da Silva |
 | 03/09/2026 | Definição e Criação das Justificativas Técnicas e Arquiteturais do sistema | Igor Henrique Tentemplis Martins|
 | 04/09/2026 | Finalização do diagrama ER (DER) | Jhonny Braga Reis |
 | 05/09/2026 | Revisão com o professor Aparecido Vilela Junior para feedback sobre melhorias; início dos ajustes indicados | Jhonny Braga Reis |
