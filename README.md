@@ -94,6 +94,14 @@ certificados.
 
 **📄 [Visualizar o DER em PDF](docs/diagrama-entidade-relacionamento.pdf)**
 
+--- 
+
+## 🗄️ Banco de Dados (MySQL)
+
+O script SQL implementa a estrutura do banco de dados do sistema, gerada a partir do DER validado, incluindo a criação das tabelas, chaves primárias e estrangeiras, restrições de unicidade e demais constraints definidas na modelagem.
+
+**[🗄️ Visualizar o Script SQL](database/nexus_academico.sql)**
+
 ---
 
 ## 💻 Arquitetura do Sistema
@@ -116,3 +124,5 @@ DAO
 JDBC
   ↓
 MySQL
+```
+
