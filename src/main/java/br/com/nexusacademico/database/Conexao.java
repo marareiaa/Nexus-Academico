@@ -8,11 +8,11 @@ import java.sql.SQLException;
 public class Conexao {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/nexus_academico";
+            "jdbc:mysql://localhost:3307/nexus_academico";
 
-    private static final String USUARIO = "root";
+    private static final String USUARIO = "nexus_app";
 
-    private static final String SENHA = "SUA_SENHA";
+    private static final String SENHA = "NexusSenha2026!";
 
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, SENHA);

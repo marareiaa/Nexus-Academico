@@ -4,13 +4,15 @@ import java.time.LocalDateTime;
 
 public class Moderador extends Usuario {
 
+    // Valores aceitos pela coluna moderador.nivel_acesso (ENUM no banco).
     private String nivelAcesso;
 
-    public Moderador(String nome, String email, String senhaHash, String nivelAcesso) {
+    public Moderador(String nome, String email, String senhaHash,
+                     String nivelAcesso) {
 
         super(nome, email, senhaHash);
 
-        this.nivelAcesso = nivelAcesso;
+        this.nivelAcesso = validarNivel(nivelAcesso);
     }
 
     public Moderador(int idUsuario, String nome, String email,
@@ -19,7 +21,16 @@ public class Moderador extends Usuario {
 
         super(idUsuario, nome, email, senhaHash, dataCadastro);
 
-        this.nivelAcesso = nivelAcesso;
+        this.nivelAcesso = validarNivel(nivelAcesso);
+    }
+
+    private static String validarNivel(String nivelAcesso) {
+        if (!"basico".equals(nivelAcesso) && !"adm".equals(nivelAcesso)) {
+            throw new IllegalArgumentException(
+                    "Nível de acesso inválido. Use: basico ou adm."
+            );
+        }
+        return nivelAcesso;
     }
 
     public String getNivelAcesso() {
@@ -27,6 +38,29 @@ public class Moderador extends Usuario {
     }
 
     public void setNivelAcesso(String nivelAcesso) {
-        this.nivelAcesso = nivelAcesso;
+        this.nivelAcesso = validarNivel(nivelAcesso);
+    }
+
+    @Override
+    public boolean autenticar(String senhaInformada) {
+        return super.autenticar(senhaInformada);
+    }
+
+    // Operação de listagem dos eventos pendentes de avaliação.
+    public void visualizarPendentes() {
+        // A consulta e a apresentação serão realizadas
+        // pelas camadas Controller, DAO e View.
+    }
+
+    // Aprova o evento e devolve o registro da avaliação.
+    public AvaliacaoEvento aprovarEvento(Evento evento) {
+        evento.aprovar();
+        return new AvaliacaoEvento(getIdUsuario(), evento.getIdEvento(), "aprovado");
+    }
+
+    // Rejeita o evento e devolve o registro da avaliação.
+    public AvaliacaoEvento rejeitarEvento(Evento evento) {
+        evento.rejeitar();
+        return new AvaliacaoEvento(getIdUsuario(), evento.getIdEvento(), "rejeitado");
     }
 }

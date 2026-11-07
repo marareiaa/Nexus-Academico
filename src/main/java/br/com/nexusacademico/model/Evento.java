@@ -98,12 +98,56 @@ public class Evento {
         this.idEvento = idEvento;
     }
 
+    // Envia o evento para avaliação do moderador (status "pendente").
+    public void publicar() {
+        if ("cancelado".equals(status) || "aprovado".equals(status)) {
+            throw new IllegalStateException(
+                    "Não é possível publicar um evento " + status + "."
+            );
+        }
+
+        this.status = "pendente";
+    }
+
+    // Atualiza os dados do evento (antes chamado atualizarDados).
+    public void atualizar(String titulo, String descricao,
+                          String local, int vagas,
+                          LocalDate dataInicio, LocalDate dataFim,
+                          int cargaHoraria, String modalidade) {
+
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.local = local;
+        this.vagas = vagas;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.cargaHoraria = cargaHoraria;
+        this.modalidade = modalidade;
+    }
+
     public void aprovar() {
+        if ("cancelado".equals(status)) {
+            throw new IllegalStateException(
+                    "Não é possível aprovar um evento cancelado."
+            );
+        }
+
         this.status = "aprovado";
     }
 
     public void rejeitar() {
+        if ("cancelado".equals(status)) {
+            throw new IllegalStateException(
+                    "Não é possível rejeitar um evento cancelado."
+            );
+        }
+
         this.status = "rejeitado";
+    }
+
+    // Exige o valor 'cancelado' no ENUM evento.status do banco.
+    public void cancelar() {
+        this.status = "cancelado";
     }
 
     public boolean possuiVagas(int quantidadeInscritos) {
