@@ -68,6 +68,7 @@ e no cumprimento das etapas previstas para o projeto.
 | **04/11/2026** | Análise do DER para planejar a conversão em código SQL; preparação das ferramentas: MySQL Workbench como ambiente de desenvolvimento | Jhonny Braga Reis |
 | **05/11/2026** | Desenvolvimento do script do banco de dados em MySQL (criação das tabelas, chaves primárias/estrangeiras e constraints) | Jhonny Braga Reis |
 | **06/11/2026** | Criação do código em Java e Iniciação do Projeto + Conexão com o BDD | Maria Clara Lima da Silva |
+| **06/11/2026** | Criação de classes dentro do código em Java | Igor Henrique Tentemplis Martins |
 
 ---
 
