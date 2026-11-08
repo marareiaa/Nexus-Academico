@@ -11,12 +11,24 @@ public class InscricaoEvento {
     private LocalDateTime dataInscricao;
     private String status;
 
+    // Construtor para criar uma nova inscrição.
     public InscricaoEvento(int idAluno, int idEvento) {
 
         this.idAluno = idAluno;
         this.idEvento = idEvento;
         this.dataInscricao = LocalDateTime.now();
         this.status = "confirmada";
+    }
+
+    // Construtor para recuperar uma inscrição do banco de dados.
+    public InscricaoEvento(int idInscricao, int idAluno, int idEvento,
+                           LocalDateTime dataInscricao, String status) {
+
+        this.idInscricao = idInscricao;
+        this.idAluno = idAluno;
+        this.idEvento = idEvento;
+        this.dataInscricao = dataInscricao;
+        this.status = status;
     }
 
     public int getIdInscricao() {
@@ -47,8 +59,31 @@ public class InscricaoEvento {
         this.status = "confirmada";
     }
 
+    // Só é possível cancelar uma inscrição confirmada.
     public void cancelar() {
+        exigirConfirmada("cancelar");
         this.status = "cancelada";
+    }
+
+    // Aluno cumpriu a presença exigida e recebe o certificado.
+    public void concluir() {
+        exigirConfirmada("concluir");
+        this.status = "concluida";
+    }
+
+    // Aluno não cumpriu a presença exigida.
+    public void marcarAusente() {
+        exigirConfirmada("marcar como ausente");
+        this.status = "ausente";
+    }
+
+    private void exigirConfirmada(String acao) {
+        if (!"confirmada".equals(status)) {
+            throw new IllegalStateException(
+                    "Não é possível " + acao + " uma inscrição "
+                            + status + "."
+            );
+        }
     }
 
     // Registra a presença do aluno em um encontro do evento.

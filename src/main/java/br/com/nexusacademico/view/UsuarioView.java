@@ -1,23 +1,28 @@
-
 package br.com.nexusacademico.view;
 
-import br.com.nexusacademico.controller.UsuarioController;
 import br.com.nexusacademico.controller.AlunoController;
-import br.com.nexusacademico.model.Usuario;
+import br.com.nexusacademico.controller.CertificadoController;
+import br.com.nexusacademico.controller.CriadorEventoController;
+import br.com.nexusacademico.controller.ModeradorController;
 import br.com.nexusacademico.model.Aluno;
+import br.com.nexusacademico.model.CertificadoEvento;
+import br.com.nexusacademico.model.CriadorEvento;
+import br.com.nexusacademico.model.Moderador;
+import br.com.nexusacademico.model.Usuario;
+import br.com.nexusacademico.util.EntradaConsole;
 
 import java.util.Scanner;
 
-public class UsuarioView {
+// Menu inicial: cadastro, login e validação pública de certificados.
+public class UsuarioView extends BaseView {
 
-    private final Scanner scanner;
-    private final UsuarioController usuarioController;
-    private final AlunoController alunoController;
+    private final AlunoController alunoController = new AlunoController();
+    private final CriadorEventoController criadorController = new CriadorEventoController();
+    private final ModeradorController moderadorController = new ModeradorController();
+    private final CertificadoController certificadoController = new CertificadoController();
 
     public UsuarioView() {
-        this.scanner = new Scanner(System.in);
-        this.usuarioController = new UsuarioController();
-        this.alunoController = new AlunoController();
+        super(new EntradaConsole(new Scanner(System.in)));
     }
 
     // Exibe o menu principal e direciona as opções escolhidas.
@@ -25,171 +30,123 @@ public class UsuarioView {
         int opcao;
 
         do {
-            System.out.println("\n================================");
-            System.out.println("       NEXUS ACADÊMICO");
-            System.out.println("================================");
-            System.out.println("1 - Cadastrar aluno");
-            System.out.println("2 - Realizar login");
-            System.out.println("3 - Listar alunos");
-            System.out.println("4 - Buscar aluno por RA");
-            System.out.println("5 - Atualizar dados acadêmicos");
-            System.out.println("0 - Sair");
-            System.out.println("================================");
-            System.out.print("Escolha uma opção: ");
-
-            String entrada = scanner.nextLine();
-
-            try {
-                opcao = Integer.parseInt(entrada);
-            } catch (NumberFormatException erro) {
-                opcao = -1;
+            titulo("NEXUS ACADÊMICO");
+            System.out.println("1 - Realizar login");
+            System.out.println("2 - Cadastrar aluno");
+            System.out.println("3 - Cadastrar criador de eventos");
+            System.out.println("4 - Validar certificado");
+            if (!moderadorController.existeModerador()) {
+                System.out.println("5 - Primeiro acesso: cadastrar moderador administrador");
             }
+            System.out.println("0 - Sair");
+
+            opcao = entrada.lerOpcao();
 
             switch (opcao) {
-                case 1 -> cadastrarAluno();
-                case 2 -> realizarLogin();
-                case 3 -> listarAlunos();
-                case 4 -> buscarAlunoPorRa();
-                case 5 -> atualizarDadosAcademicos();
-                case 0 -> System.out.println(
-                        "Encerrando o Nexus Acadêmico..."
-                );
-                default -> System.out.println(
-                        "Opção inválida. Tente novamente."
-                );
+                case 1 -> realizarLogin();
+                case 2 -> cadastrarAluno();
+                case 3 -> cadastrarCriador();
+                case 4 -> validarCertificado();
+                case 5 -> primeiroAcesso();
+                case 0 -> System.out.println("Encerrando o Nexus Acadêmico...");
+                default -> System.out.println("Opção inválida. Tente novamente.");
             }
 
         } while (opcao != 0);
     }
 
-    // Coleta os dados e solicita o cadastro de um novo aluno.
     private void cadastrarAluno() {
-        System.out.println("\n--- CADASTRO DE ALUNO ---");
+        titulo("CADASTRO DE ALUNO");
 
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome = entrada.lerTexto("Nome");
+        String email = entrada.lerTexto("E-mail");
+        String senha = entrada.lerTexto("Senha");
+        String ra = entrada.lerTexto("RA");
+        String curso = entrada.lerTexto("Curso");
+        String periodo = entrada.lerTexto("Período");
+        String turma = entrada.lerTexto("Turma");
 
-        System.out.print("E-mail: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine();
-
-        System.out.print("RA: ");
-        String ra = scanner.nextLine();
-
-        System.out.print("Curso: ");
-        String curso = scanner.nextLine();
-
-        System.out.print("Período: ");
-        String periodo = scanner.nextLine();
-
-        System.out.print("Turma: ");
-        String turma = scanner.nextLine();
-
-        boolean cadastrado = alunoController.cadastrarAluno(
-                nome, email, senha, ra, curso, periodo, turma
+        resultado(
+                alunoController.cadastrarAluno(nome, email, senha, ra, curso, periodo, turma),
+                "Aluno cadastrado com sucesso!",
+                "Não foi possível cadastrar o aluno."
         );
-
-        if (cadastrado) {
-            System.out.println("\nAluno cadastrado com sucesso!");
-        } else {
-            System.out.println("\nNão foi possível cadastrar o aluno.");
-        }
     }
 
-    // Realiza a autenticação de um usuário.
+    private void cadastrarCriador() {
+        titulo("CADASTRO DE CRIADOR DE EVENTOS");
+
+        String nome = entrada.lerTexto("Nome");
+        String email = entrada.lerTexto("E-mail");
+        String senha = entrada.lerTexto("Senha");
+        String vinculo = entrada.lerTexto("Vínculo (professor/coordenador/membro_liga)");
+        String cargo = entrada.lerTexto("Cargo");
+
+        resultado(
+                criadorController.cadastrarCriador(nome, email, senha, vinculo, cargo),
+                "Criador de eventos cadastrado com sucesso!",
+                "Não foi possível realizar o cadastro."
+        );
+    }
+
+    private void primeiroAcesso() {
+        titulo("PRIMEIRO ACESSO - MODERADOR ADMINISTRADOR");
+
+        String nome = entrada.lerTexto("Nome");
+        String email = entrada.lerTexto("E-mail");
+        String senha = entrada.lerTexto("Senha");
+
+        resultado(
+                moderadorController.cadastrarModerador(null, nome, email, senha, "adm"),
+                "Moderador administrador cadastrado com sucesso!",
+                "Não foi possível realizar o cadastro."
+        );
+    }
+
+    // Autentica e abre o menu do perfil correspondente.
     private void realizarLogin() {
-        System.out.println("\n--- LOGIN ---");
+        titulo("LOGIN");
 
-        System.out.print("E-mail: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine();
+        String email = entrada.lerTexto("E-mail");
+        String senha = entrada.lerTexto("Senha");
 
         Usuario usuario = usuarioController.realizarLogin(email, senha);
 
-        if (usuario != null) {
-            System.out.println("\nLogin realizado com sucesso!");
-            System.out.println("Bem-vindo(a), " + usuario.getNome() + "!");
-        } else {
+        if (usuario == null) {
             System.out.println("\nE-mail ou senha inválidos.");
-        }
-    }
-
-    // Consulta e apresenta todos os alunos cadastrados.
-    private void listarAlunos() {
-        System.out.println("\n--- ALUNOS CADASTRADOS ---");
-
-        var alunos = alunoController.listarAlunos();
-
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
             return;
         }
 
-        for (var aluno : alunos) {
-            System.out.println("----------------------------");
-            System.out.println("Nome: " + aluno.getNome());
-            System.out.println("E-mail: " + aluno.getEmail());
-            System.out.println("RA: " + aluno.getRa());
-            System.out.println("Curso: " + aluno.getCurso());
-            System.out.println("Período: " + aluno.getPeriodo());
-            System.out.println("Turma: " + aluno.getTurma());
-        }
+        System.out.println("\nLogin realizado com sucesso!");
+        System.out.println("Bem-vindo(a), " + usuario.getNome() + "!");
 
-        System.out.println("----------------------------");
-        System.out.println("Total de alunos: " + alunos.size());
-    }
-
-    // Localiza um aluno utilizando seu Registro Acadêmico.
-    private void buscarAlunoPorRa() {
-        System.out.println("\n--- BUSCAR ALUNO ---");
-
-        System.out.print("Informe o RA do aluno: ");
-        String ra = scanner.nextLine();
-
-        Aluno aluno = alunoController.buscarPorRa(ra);
-
-        if (aluno == null) {
-            System.out.println("Aluno não encontrado.");
-            return;
-        }
-
-        System.out.println("\n--- DADOS DO ALUNO ---");
-        System.out.println("Nome: " + aluno.getNome());
-        System.out.println("E-mail: " + aluno.getEmail());
-        System.out.println("RA: " + aluno.getRa());
-        System.out.println("Curso: " + aluno.getCurso());
-        System.out.println("Período: " + aluno.getPeriodo());
-        System.out.println("Turma: " + aluno.getTurma());
-    }
-
-    // Coleta os novos dados acadêmicos e solicita a atualização.
-    private void atualizarDadosAcademicos() {
-        System.out.println("\n--- ATUALIZAR DADOS ACADÊMICOS ---");
-
-        System.out.print("RA do aluno: ");
-        String ra = scanner.nextLine();
-
-        System.out.print("Novo curso: ");
-        String curso = scanner.nextLine();
-
-        System.out.print("Novo período: ");
-        String periodo = scanner.nextLine();
-
-        System.out.print("Nova turma: ");
-        String turma = scanner.nextLine();
-
-        boolean atualizado = alunoController.atualizarDadosAcademicos(
-                ra, curso, periodo, turma
-        );
-
-        if (atualizado) {
-            System.out.println("\nDados acadêmicos atualizados com sucesso!");
+        if (usuario instanceof Aluno aluno) {
+            new AlunoView(entrada, aluno).exibirMenu();
+        } else if (usuario instanceof CriadorEvento criador) {
+            new CriadorEventoView(entrada, criador).exibirMenu();
+        } else if (usuario instanceof Moderador moderador) {
+            new ModeradorView(entrada, moderador).exibirMenu();
         } else {
-            System.out.println("\nNão foi possível atualizar os dados.");
+            System.out.println("Este usuário não possui um perfil de acesso.");
         }
+    }
+
+    private void validarCertificado() {
+        titulo("VALIDAR CERTIFICADO");
+
+        String codigo = entrada.lerTexto("Código de verificação");
+
+        CertificadoEvento c = certificadoController.validar(codigo);
+
+        if (c == null) {
+            System.out.println("\nCertificado INVÁLIDO ou não encontrado.");
+            return;
+        }
+
+        System.out.println("\nCertificado VÁLIDO.");
+        System.out.println("Evento: " + certificadoController.tituloDoEvento(c));
+        System.out.println("Carga horária: " + c.getCargaHoraria() + "h");
+        System.out.println("Emitido em: "
+                + c.getDataEmissao().format(EntradaConsole.DATA_HORA));
     }
 }

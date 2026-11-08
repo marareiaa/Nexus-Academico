@@ -2,6 +2,8 @@ package br.com.nexusacademico.controller;
 
 import br.com.nexusacademico.dao.UsuarioDAO;
 import br.com.nexusacademico.model.Usuario;
+import br.com.nexusacademico.util.SenhaUtil;
+import br.com.nexusacademico.util.ValidacaoUtil;
 
 public class UsuarioController {
 
@@ -39,7 +41,8 @@ public class UsuarioController {
         return usuarioDAO.cadastrar(usuario);
     }
 
-    // Realiza a autenticação de um usuário.
+    // Realiza a autenticação. Devolve o usuário já no seu perfil
+    // (Aluno, CriadorEvento ou Moderador).
     public Usuario realizarLogin(String email, String senha) {
 
         if (email == null || email.isBlank()
@@ -50,5 +53,64 @@ public class UsuarioController {
         }
 
         return usuarioDAO.autenticar(email, senha);
+    }
+
+    // Atualiza nome e e-mail do usuário logado.
+    public boolean atualizarPerfil(Usuario usuario, String nome, String email) {
+
+        if (ValidacaoUtil.textoVazio(nome)) {
+            System.out.println("O nome é obrigatório.");
+            return false;
+        }
+
+        if (!ValidacaoUtil.emailValido(email)) {
+            System.out.println("Informe um e-mail válido.");
+            return false;
+        }
+
+        if (!email.equalsIgnoreCase(usuario.getEmail())
+                && usuarioDAO.emailExiste(email)) {
+            System.out.println("Já existe um usuário com este e-mail.");
+            return false;
+        }
+
+        String nomeAnterior = usuario.getNome();
+        String emailAnterior = usuario.getEmail();
+
+        usuario.atualizarPerfil(nome, email);
+
+        if (usuarioDAO.atualizarPerfil(usuario)) {
+            return true;
+        }
+
+        usuario.atualizarPerfil(nomeAnterior, emailAnterior);
+        return false;
+    }
+
+    // Altera a senha do usuário logado, exigindo a senha atual.
+    public boolean alterarSenha(
+            Usuario usuario,
+            String senhaAtual,
+            String novaSenha
+    ) {
+
+        if (!usuario.autenticar(senhaAtual)) {
+            System.out.println("Senha atual incorreta.");
+            return false;
+        }
+
+        if (!ValidacaoUtil.senhaValida(novaSenha)) {
+            System.out.println("A nova senha deve possuir pelo menos 8 caracteres.");
+            return false;
+        }
+
+        String novoHash = SenhaUtil.gerarHash(novaSenha);
+
+        if (!usuarioDAO.alterarSenha(usuario.getIdUsuario(), novoHash)) {
+            return false;
+        }
+
+        usuario.alterarSenha(novoHash);
+        return true;
     }
 }

@@ -41,6 +41,11 @@ public class Moderador extends Usuario {
         this.nivelAcesso = validarNivel(nivelAcesso);
     }
 
+    // Moderadores administradores também gerenciam moderadores e tipos de evento.
+    public boolean isAdm() {
+        return "adm".equals(nivelAcesso);
+    }
+
     @Override
     public boolean autenticar(String senhaInformada) {
         return super.autenticar(senhaInformada);
@@ -48,8 +53,7 @@ public class Moderador extends Usuario {
 
     // Operação de listagem dos eventos pendentes de avaliação.
     public void visualizarPendentes() {
-        // A consulta e a apresentação serão realizadas
-        // pelas camadas Controller, DAO e View.
+        // A consulta e a apresentação são feitas por ModeradorController e ModeradorView.
     }
 
     // Aprova o evento e devolve o registro da avaliação.

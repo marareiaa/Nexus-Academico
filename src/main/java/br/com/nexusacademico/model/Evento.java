@@ -2,8 +2,12 @@ package br.com.nexusacademico.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Evento {
+
+    private static final List<String> MODALIDADES =
+            List.of("presencial", "online", "hibrido");
 
     private int idEvento;
     private int idOrganizador;
@@ -23,10 +27,14 @@ public class Evento {
 
     private LocalDateTime dataCriacao;
 
+    // Construtor para criar um novo evento (nasce "pendente").
     public Evento(int idOrganizador, int idTipoEvento,
                   String titulo, String descricao, String local,
                   int vagas, LocalDate dataInicio, LocalDate dataFim,
                   int cargaHoraria, String modalidade) {
+
+        validarDados(titulo, local, vagas, dataInicio, dataFim,
+                cargaHoraria, modalidade);
 
         this.idOrganizador = idOrganizador;
         this.idTipoEvento = idTipoEvento;
@@ -40,6 +48,70 @@ public class Evento {
         this.modalidade = modalidade;
         this.status = "pendente";
         this.dataCriacao = LocalDateTime.now();
+    }
+
+    // Construtor para recuperar um evento do banco de dados.
+    public Evento(int idEvento, int idOrganizador, int idTipoEvento,
+                  String titulo, String descricao, String local,
+                  int vagas, LocalDate dataInicio, LocalDate dataFim,
+                  int cargaHoraria, String modalidade,
+                  String status, LocalDateTime dataCriacao) {
+
+        this.idEvento = idEvento;
+        this.idOrganizador = idOrganizador;
+        this.idTipoEvento = idTipoEvento;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.local = local;
+        this.vagas = vagas;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.cargaHoraria = cargaHoraria;
+        this.modalidade = modalidade;
+        this.status = status;
+        this.dataCriacao = dataCriacao;
+    }
+
+    private static void validarDados(String titulo, String local, int vagas,
+                                     LocalDate dataInicio, LocalDate dataFim,
+                                     int cargaHoraria, String modalidade) {
+
+        if (titulo == null || titulo.isBlank() || titulo.length() > 100) {
+            throw new IllegalArgumentException(
+                    "O título é obrigatório (até 100 caracteres)."
+            );
+        }
+
+        if (local != null && local.length() > 100) {
+            throw new IllegalArgumentException(
+                    "O local deve ter no máximo 100 caracteres."
+            );
+        }
+
+        if (vagas <= 0) {
+            throw new IllegalArgumentException(
+                    "O número de vagas deve ser maior que zero."
+            );
+        }
+
+        if (dataInicio == null || dataFim == null
+                || dataFim.isBefore(dataInicio)) {
+            throw new IllegalArgumentException(
+                    "A data de fim não pode ser anterior à data de início."
+            );
+        }
+
+        if (cargaHoraria <= 0) {
+            throw new IllegalArgumentException(
+                    "A carga horária deve ser maior que zero."
+            );
+        }
+
+        if (modalidade == null || !MODALIDADES.contains(modalidade)) {
+            throw new IllegalArgumentException(
+                    "Modalidade inválida. Use: presencial, online ou hibrido."
+            );
+        }
     }
 
     public int getIdEvento() {
@@ -98,7 +170,7 @@ public class Evento {
         this.idEvento = idEvento;
     }
 
-    // Envia o evento para avaliação do moderador (status "pendente").
+    // Envia (ou reenvia) o evento para avaliação do moderador.
     public void publicar() {
         if ("cancelado".equals(status) || "aprovado".equals(status)) {
             throw new IllegalStateException(
@@ -109,11 +181,20 @@ public class Evento {
         this.status = "pendente";
     }
 
-    // Atualiza os dados do evento (antes chamado atualizarDados).
+    // Atualiza os dados do evento.
     public void atualizar(String titulo, String descricao,
                           String local, int vagas,
                           LocalDate dataInicio, LocalDate dataFim,
                           int cargaHoraria, String modalidade) {
+
+        if ("cancelado".equals(status)) {
+            throw new IllegalStateException(
+                    "Um evento cancelado não pode ser editado."
+            );
+        }
+
+        validarDados(titulo, local, vagas, dataInicio, dataFim,
+                cargaHoraria, modalidade);
 
         this.titulo = titulo;
         this.descricao = descricao;
@@ -125,28 +206,31 @@ public class Evento {
         this.modalidade = modalidade;
     }
 
+    // Só eventos pendentes podem ser avaliados.
     public void aprovar() {
-        if ("cancelado".equals(status)) {
-            throw new IllegalStateException(
-                    "Não é possível aprovar um evento cancelado."
-            );
-        }
-
+        exigirPendente();
         this.status = "aprovado";
     }
 
     public void rejeitar() {
-        if ("cancelado".equals(status)) {
-            throw new IllegalStateException(
-                    "Não é possível rejeitar um evento cancelado."
-            );
-        }
-
+        exigirPendente();
         this.status = "rejeitado";
     }
 
-    // Exige o valor 'cancelado' no ENUM evento.status do banco.
+    private void exigirPendente() {
+        if (!"pendente".equals(status)) {
+            throw new IllegalStateException(
+                    "Somente eventos pendentes podem ser avaliados "
+                            + "(status atual: " + status + ")."
+            );
+        }
+    }
+
     public void cancelar() {
+        if ("cancelado".equals(status)) {
+            throw new IllegalStateException("O evento já está cancelado.");
+        }
+
         this.status = "cancelado";
     }
 

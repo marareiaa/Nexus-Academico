@@ -25,6 +25,17 @@ public class Presenca {
         this.dataRegistro = LocalDateTime.now();
     }
 
+    // Construtor para recuperar uma presença do banco de dados.
+    public Presenca(int idPresenca, int idInscricao, int idEncontro,
+                    boolean presente, LocalDateTime dataRegistro) {
+
+        this.idPresenca = idPresenca;
+        this.idInscricao = idInscricao;
+        this.idEncontro = idEncontro;
+        this.presente = presente;
+        this.dataRegistro = dataRegistro;
+    }
+
     public int getIdPresenca() {
         return idPresenca;
     }

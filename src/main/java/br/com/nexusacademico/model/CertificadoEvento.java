@@ -14,6 +14,8 @@ public class CertificadoEvento {
     private String url;
     private String status;
 
+    // Construtor para um novo certificado (a url pode ser nula:
+    // gerar() define um caminho padrão a partir do código).
     public CertificadoEvento(int idInscricao, int cargaHoraria, String url) {
 
         if (idInscricao <= 0) {
@@ -31,6 +33,21 @@ public class CertificadoEvento {
         this.idInscricao = idInscricao;
         this.cargaHoraria = cargaHoraria;
         this.url = url;
+    }
+
+    // Construtor para recuperar um certificado do banco de dados.
+    public CertificadoEvento(int idCertificado, int idInscricao,
+                             String codigoVerificacao,
+                             LocalDateTime dataEmissao, int cargaHoraria,
+                             String url, String status) {
+
+        this.idCertificado = idCertificado;
+        this.idInscricao = idInscricao;
+        this.codigoVerificacao = codigoVerificacao;
+        this.dataEmissao = dataEmissao;
+        this.cargaHoraria = cargaHoraria;
+        this.url = url;
+        this.status = status;
     }
 
     public int getIdCertificado() {
@@ -78,6 +95,10 @@ public class CertificadoEvento {
                 .toString()
                 .replace("-", "")
                 .toUpperCase();
+
+        if (url == null || url.isBlank()) {
+            this.url = "certificados/" + codigoVerificacao + ".pdf";
+        }
 
         this.dataEmissao = LocalDateTime.now();
         this.status = "emitido";

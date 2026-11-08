@@ -1,4 +1,3 @@
-
 package br.com.nexusacademico.dao;
 
 import br.com.nexusacademico.database.Conexao;
@@ -126,7 +125,6 @@ public class AlunoDAO {
 
                 if (resultado.next()) {
                     Aluno aluno = new Aluno(
-
                             resultado.getInt("id_usuario"),
                             resultado.getString("nome"),
                             resultado.getString("email"),
@@ -140,6 +138,7 @@ public class AlunoDAO {
                     );
 
                     aluno.setAtivo(resultado.getBoolean("ativo"));
+
                     return aluno;
                 }
             }
@@ -163,7 +162,7 @@ public class AlunoDAO {
                     u.email,
                     u.senha_hash,
                     u.data_cadastro,
-                     u.ativo,
+                    u.ativo,
                     a.ra,
                     a.curso,
                     a.periodo,
@@ -194,7 +193,9 @@ public class AlunoDAO {
                         resultado.getString("periodo"),
                         resultado.getString("turma")
                 );
+
                 aluno.setAtivo(resultado.getBoolean("ativo"));
+
                 alunos.add(aluno);
             }
 
@@ -265,5 +266,62 @@ public class AlunoDAO {
 
             return false;
         }
+    }
+
+    // Busca um aluno pelo identificador (id_usuario).
+    public Aluno buscarPorId(int idAluno) {
+
+        String sql = """
+                SELECT
+                    u.id_usuario,
+                    u.nome,
+                    u.email,
+                    u.senha_hash,
+                    u.data_cadastro,
+                    u.ativo,
+                    a.ra,
+                    a.curso,
+                    a.periodo,
+                    a.turma
+                FROM usuario u
+                INNER JOIN aluno a
+                    ON u.id_usuario = a.id_aluno
+                WHERE u.id_usuario = ?
+                """;
+
+        try (Connection conexao = Conexao.conectar();
+             PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+            comando.setInt(1, idAluno);
+
+            try (ResultSet resultado = comando.executeQuery()) {
+
+                if (resultado.next()) {
+                    Aluno aluno = new Aluno(
+                            resultado.getInt("id_usuario"),
+                            resultado.getString("nome"),
+                            resultado.getString("email"),
+                            resultado.getString("senha_hash"),
+                            resultado.getTimestamp("data_cadastro")
+                                    .toLocalDateTime(),
+                            resultado.getString("ra"),
+                            resultado.getString("curso"),
+                            resultado.getString("periodo"),
+                            resultado.getString("turma")
+                    );
+
+                    aluno.setAtivo(resultado.getBoolean("ativo"));
+
+                    return aluno;
+                }
+            }
+
+        } catch (SQLException erro) {
+            System.out.println(
+                    "Erro ao buscar aluno: " + erro.getMessage()
+            );
+        }
+
+        return null;
     }
 }
