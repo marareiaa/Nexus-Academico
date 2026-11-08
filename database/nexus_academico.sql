@@ -19,6 +19,7 @@ CREATE TABLE usuario (
     nome          VARCHAR(100) NOT NULL,
     email         VARCHAR(100) NOT NULL UNIQUE,
     senha_hash    VARCHAR(255) NOT NULL,
+	ativo         BOOLEAN      NOT NULL DEFAULT TRUE,
     data_cadastro DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -81,7 +82,7 @@ CREATE TABLE evento (
     data_fim       DATE         NOT NULL,
     carga_horaria  INT          NOT NULL,
     modalidade     ENUM('presencial', 'online', 'hibrido')   NOT NULL,
-    status         ENUM('pendente', 'aprovado', 'rejeitado') NOT NULL DEFAULT 'pendente',
+    status         ENUM('pendente', 'aprovado', 'rejeitado', 'cancelado') NOT NULL DEFAULT 'pendente',
     data_criacao   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     CONSTRAINT fk_evento_organizador
