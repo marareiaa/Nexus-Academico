@@ -70,6 +70,7 @@ e no cumprimento das etapas previstas para o projeto.
 | **06/11/2026** | Criação do código em Java e Iniciação do Projeto + Conexão com o BDD | Maria Clara Lima da Silva |
 | **06/11/2026** | Criação de classes dentro do código em Java | Igor Henrique Tentemplis Martins |
 | **08/11/2026** | Ajustes das Classes Java + Testes com o BDD | Maria Clara Lima da Silva |
+| **08/11/2026** | Classes Atualizadas | Maria Clara Lima da Silva |
 
 ---
 
